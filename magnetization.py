@@ -1,8 +1,6 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
-import time
-
 from numba import jit
 
 
@@ -10,7 +8,7 @@ from numba import jit
 def energy(system, i, j, L):
     """Energy function of spins connected to site (i, j)."""
     return -1. * system[i, j] * (system[np.mod(i - 1, L), j] + system[np.mod(i + 1, L), j] +
-                                 system[i, np.mod(j - 1, L)] + system[i, np.mod(j + 1, L)])
+                                 system[i, np.mod(j - 1, L)] + system[i, np.mod(j + 1, L)])- 1*system[i,j]
 
 
 @jit
@@ -18,7 +16,8 @@ def prepare_system(L):
     """Initialize the system."""
     system = 2 * (0.5 - np.random.randint(0, 2, size=(L, L)))
     return system
-
+save= prepare_system(L=4)
+print(save.shape)
 
 @jit(nopython=True)
 def measure_energy(system):
@@ -83,7 +82,7 @@ if __name__ == "__main__":
         for k in range(N_bins):
             Ms = metropolis_loop(system, T, N_sweeps, N_eq, N_flips)
             mean_Ms= np.mean(Ms)
-            magnetization_list_bin.append(mean_Ms)
+            magnetization_list_bin.append(np.abs(mean_Ms))
         magnetization_list.append([np.mean(magnetization_list_bin), np.std(magnetization_list_bin) / np.sqrt(N_bins)])
         print(T, mean_Ms, magnetization_list[-1])
 
