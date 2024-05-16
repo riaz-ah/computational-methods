@@ -1,3 +1,6 @@
+
+
+
 def moving_chips(n, lst):
     initial_index = -1
     final_index = -1
